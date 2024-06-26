@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panchayat Head Panel</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.5.3/js/bootstrap.min.js"></script>
+    <style>
+        .center-align {
+            text-align: center;
+        }
+        .navbar {
+            background-color: #343a40; /* Dark background for navbar */
+            color: white;
+        }
+        .navbar a.navbar-brand {
+            color: white;
+        }
+        .navbar a.btn-danger {
+            color: white;
+        }
+        .footer {
+            background-color: #343a40; /* Dark background for footer */
+            color: white;
+            padding: 1rem 0;
+        }
+        body {
+            /*background-image: url("{% static 'images/Panchayat_home.jpg' %}");*/
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent background for content */
+            padding: 2rem;
+            border-radius: 10px;
+        }
+        img.consumer-photo {
+            max-width: 200px; /* Larger images */
+            max-height: 200px;
+            border-radius: 10px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand"><b>DHULIKONA PROJECT</b></a>
+            <a href="/logout" class="btn btn-danger">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="center-align">Welcome to Panchayat Head Panel</h2>
+                <h4 class="center-align">Panchayat: {{ panchayat.panchayat_name }}</h4>
+                <hr>
+
+                <!-- Add Consumer Section -->
+                <h3>Add Consumer</h3>
+                <form action="{% url 'panchayatheadpage' panchayat.panchayat_name %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="person_name">Name</label>
+                        <input type="text" class="form-control" id="person_name" name="person_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="aadhaar">Aadhaar</label>
+                        <input type="text" class="form-control" id="aadhaar" name="aadhaar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact</label>
+                        <input type="text" class="form-control" id="contact" name="contact" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="photo">Photo</label>
+                        <input type="file" class="form-control" id="photo" name="photo">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <input type="hidden" name="gram_panchayat_id" value="{{ person.gram_panchayat.id }}">
+                    <button type="submit" class="btn btn-primary">Add Consumer</button>
+                </form>
+                <hr>
+
+                <!-- Consumer Details Section -->
+                <h3>Consumer Details</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Aadhaar</th>
+                            <th>Contact</th>
+                            <th>Address</th>
+                            <th>Photo</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for consumer in consumers %}
+                        <tr>
+                            <td>{{ consumer.person_name }}</td>
+                            <td>{{ consumer.aadhaar }}</td>
+                            <td>{{ consumer.contact }}</td>
+                            <td>{{ consumer.address }}</td>
+                            <td>
+                                {% if consumer.photo %}
+                                <img src="{{ consumer.photo.url }}" alt="Consumer Photo" class="consumer-photo">
+                                {% else %}
+                                No photo available
+                                {% endif %}
+                            </td>
+                            <td>{{ consumer.is_enabled|yesno:"Enabled,Disabled" }}</td>
+                            <td>
+                                <form action="{% url 'toggle_consumer_status' consumer.id %}" method="POST" style="display:inline;">
+                                    {% csrf_token %}
+                                    {% if consumer.is_enabled %}
+                                    <button type="submit" class="btn btn-warning">Disable</button>
+                                    {% else %}
+                                    <button type="submit" class="btn btn-success">Enable</button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7">No consumers found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-body-tertiary mt-5">
+        <div class="container-fluid text-center">
+            <p>&copy; 2024 Dhulikona Project. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

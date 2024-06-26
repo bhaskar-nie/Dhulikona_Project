@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Panchayat Head Management
+{% endblock %}
+
+{% block start %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Panchayat Heads Management</h2>
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Panchayat Name</th>
+                <th>Panchayat Address</th>
+                <th>Panchayat Head</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for panchayat in panchayats %}
+                <tr>
+                    <td>{{ panchayat.panchayat_name }}</td>
+                    <td>{{ panchayat.panchayat_address }}</td>
+                    <td>
+                        {% if panchayat.panchayat_head %}
+                            <img src="{{ panchayat.panchayat_head.photo.url }}" alt="Photo" class="img-thumbnail" style="width: 200px; height: 150px;">
+                            <p>{{ panchayat.panchayat_head.person_name }}</p>
+                        {% else %}
+                            <p>No Head Assigned</p>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if panchayat.panchayat_head %}
+                            {% if panchayat.panchayat_head.is_enabled  %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger">Inactive</span>
+                            {% endif %}
+                        {% else %}
+                            <p>No Head Assigned</p>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'update_panchayat_head' panchayat_id=panchayat.id %}" class="btn btn-primary">Update Head</a>
+                        {% if panchayat.panchayat_head %}
+                            {% if panchayat.panchayat_head.is_enabled  %}
+                                <a href="{% url 'toggle_panchayat_head_status' head_id=panchayat.panchayat_head.id %}" class="btn btn-danger">Disable</a>
+                            {% else %}
+                                <a href="{% url 'toggle_panchayat_head_status' head_id=panchayat.panchayat_head.id %}" class="btn btn-success">Enable</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
