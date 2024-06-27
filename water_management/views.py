@@ -78,7 +78,7 @@ def adminpage(request):
     return render(request, 'adminsite.html')
 
 
-@login_required(login_url="portal/login/")
+@login_required
 def panchayatheadpage(request, panchayat_name):
     panchayat = get_object_or_404(GramPanchayat, panchayat_name=panchayat_name)
     consumers = panchayat.residents.filter(person_role='consumer')
