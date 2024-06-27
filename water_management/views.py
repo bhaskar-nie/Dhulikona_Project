@@ -75,7 +75,11 @@ def logoutuser(request):
 
 @login_required(login_url="portal/login/")
 def adminpage(request):
-    return render(request, 'adminsite.html')
+    fee_rate = FeeRate.objects.first()  # Assuming there's only one FeeRate object
+    context = {
+        'fee_rate': fee_rate.fee_rate if fee_rate else 'N/A'
+    }
+    return render(request, 'adminsite.html', context)
 
 
 @login_required
@@ -130,6 +134,7 @@ def update_water_fee_rate(request):
                 id=1,
                 defaults={'fee_rate': fee_rate}
             )
+            
             return redirect('/admin-panel')  # Redirect to the admin panel or another appropriate view
     return HttpResponse(status=400)  # Bad request if something goes wrong
 

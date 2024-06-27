@@ -88,7 +88,7 @@
                         <form action="{% url 'update_water_fee_rate' %}" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="feeRate">Current Fee Rate</label>
+                                <label for="feeRate">Current Fee Rate: {{ fee_rate }}</label>
                                 <input type="number" class="form-control" id="feeRate" name="fee_rate" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Update Fee Rate</button>

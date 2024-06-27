@@ -93,7 +93,7 @@ class Maintenance(models.Model):
 class FeeCollection(models.Model):
     fee_amount = models.FloatField(default=0)
     fee_date = models.DateField()
-    fee_water_committee = models.ForeignKey(WaterUserCommittee, related_name="feewatercommittee", on_delete=models.CASCADE)
+    concerned_person= models.ForeignKey(Person, related_name="person_fee", on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"Fee collected on {self.fee_date} - Amount: {self.fee_amount}"
