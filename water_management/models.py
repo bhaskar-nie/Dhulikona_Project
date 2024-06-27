@@ -7,6 +7,7 @@ class Person(models.Model):
     ROLE_CHOICES = [
         ('panchayathead', 'Panchayat Head'),
         ('consumer', 'Consumer'),
+        ('contractor', 'Contractor'),
     ]
 
     person_name = models.CharField(max_length=100)

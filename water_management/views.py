@@ -204,3 +204,105 @@ def update_panchayat_head(request, panchayat_id):
         'panchayat': panchayat
     }
     return render(request, 'update_panchayat_head.html', context)
+
+@login_required(login_url="portal/login/")
+def gram_panchayat_management(request):
+    panchayats = GramPanchayat.objects.all()
+    context = {
+        'panchayats': panchayats
+    }
+    return render(request, 'gram_panchayat_management.html', context)
+
+@login_required(login_url="portal/login/")
+def add_panchayat(request):
+    if request.method == 'POST':
+        panchayat_name = request.POST.get('panchayat_name')
+        panchayat_address = request.POST.get('panchayat_address')
+
+        head_name = request.POST.get('head_name')
+        head_aadhaar = request.POST.get('head_aadhaar')
+        head_contact = request.POST.get('head_contact')
+        head_address = request.POST.get('head_address')
+        head_password = request.POST.get('head_password')
+        head_photo = request.FILES.get('head_photo')
+
+        contractor_name = request.POST.get('contractor_name')
+        contractor_aadhaar = request.POST.get('contractor_aadhaar')
+        contractor_contact = request.POST.get('contractor_contact')
+        contractor_address = request.POST.get('contractor_address')
+        contractor_password = request.POST.get('contractor_password')
+        contractor_photo = request.FILES.get('contractor_photo')
+
+        # Create Panchayat
+        new_panchayat = GramPanchayat.objects.create(
+            panchayat_name=panchayat_name,
+            panchayat_address=panchayat_address,
+        )
+
+        # Create Panchayat Head
+        panchayat_head = Person.objects.create(
+            person_name=head_name,
+            aadhaar=head_aadhaar,
+            contact=head_contact,
+            address=head_address,
+            password=head_password,
+            person_role='panchayathead',
+            is_enabled=True,
+            photo=head_photo,
+            gram_panchayat=new_panchayat  # Assigning the created panchayat to the head
+        )
+
+        # Create Contractor
+        contractor_person = Person.objects.create(
+            person_name=contractor_name,
+            aadhaar=contractor_aadhaar,
+            contact=contractor_contact,
+            address=contractor_address,
+            password=contractor_password,
+            person_role='contractor',
+            is_enabled=True,
+            photo=contractor_photo,
+            gram_panchayat=new_panchayat  # Assigning the created panchayat to the contractor
+        )
+        
+        contractor = Contractor.objects.create(contractor_detail=contractor_person)
+
+        # Update Panchayat with head and contractor
+        new_panchayat.panchayat_head = panchayat_head
+        new_panchayat.contractor = contractor
+        new_panchayat.save()
+
+        messages.success(request, 'New Panchayat added successfully.')
+        return redirect('gram_panchayat_management')
+
+    return render(request, 'add_panchayat.html')
+
+@login_required(login_url="portal/login/")
+def assign_panchayat_head(request, panchayat_id):
+    panchayat = get_object_or_404(GramPanchayat, id=panchayat_id)
+
+    if request.method == 'POST':
+        head_id = request.POST.get('head_id')
+        password = request.POST.get('password')
+
+        if head_id and password:
+            head = get_object_or_404(Person, id=head_id)
+            head.password = password
+            head.person_role = 'panchayathead'
+            head.gram_panchayat = panchayat
+            head.is_enabled = True
+            head.save()
+
+            panchayat.panchayat_head = head
+            panchayat.save()
+
+            messages.success(request, 'Panchayat Head assigned successfully.')
+            return redirect('gram_panchayat_management')
+
+        messages.error(request, 'Please provide a valid head ID and password.')
+
+    context = {
+        'panchayat': panchayat,
+        'residents': panchayat.residents.filter(person_role='consumer')
+    }
+    return render(request, 'assign_panchayat_head.html', context)
