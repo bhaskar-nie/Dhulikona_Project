@@ -306,3 +306,8 @@ def assign_panchayat_head(request, panchayat_id):
         'residents': panchayat.residents.filter(person_role='consumer')
     }
     return render(request, 'assign_panchayat_head.html', context)
+
+@login_required(login_url="portal/login/")
+def view_consumers(request):
+    consumers = Person.objects.filter(person_role='consumer').order_by('gram_panchayat__panchayat_name')
+    return render(request, 'view_consumers.html', {'consumers': consumers})

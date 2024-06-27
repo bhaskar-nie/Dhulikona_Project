@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password
+from django.utils import timezone
 
 # Create your models here.
 
@@ -19,6 +20,8 @@ class Person(models.Model):
     password = models.CharField(max_length=128)  # Password field, will be hashed
     is_enabled = models.BooleanField(default=True)
     gram_panchayat = models.ForeignKey('GramPanchayat', related_name='residents', on_delete=models.SET_NULL, null=True, blank=True)
+    due_days=models.IntegerField(default=0)
+    enable_date = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):
         # Ensure password is hashed before saving

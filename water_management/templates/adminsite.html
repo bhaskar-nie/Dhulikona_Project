@@ -47,7 +47,7 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="logout">Logout</a>
+                    <a class="nav-link" href="{% url 'logoutuser' %}">Logout</a>
                 </li>
             </ul>
         </div>
@@ -75,7 +75,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Panchayat Head Management</h5>
                         <p class="card-text">Assign, Update, Enable, or Disable Panchayat Heads.</p>
-                        <a href="/panchayat-head-mgmt" class="btn btn-primary">Go to Panchayat Head Management</a>
+                        <a href="{% url 'panchayatheadmgmt' %}" class="btn btn-primary">Go to Panchayat Head Management</a>
                     </div>
                 </div>
             </div>
@@ -96,15 +96,58 @@
                     </div>
                 </div>
             </div>
+            <!-- View Consumers Option -->
+            <div class="col-md-4 option-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">View All Consumers</h5>
+                        <p class="card-text">See the list of consumers with their details in a tabular format.</p>
+                        <a href="{% url 'viewconsumers' %}" class="btn btn-primary">View Consumers</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Water Quality Report Management Option -->
+            <div class="col-md-4 option-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Water Quality Report Management</h5>
+                        <p class="card-text">View water quality reports.</p>
+                        <a href="#" class="btn btn-primary">View Reports</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Water Operators Option -->
+            <div class="col-md-4 option-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Water Operators</h5>
+                        <p class="card-text">Manage water operators.</p>
+                        <a href="#" class="btn btn-primary">Manage Operators</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Fee Management Option -->
+            <div class="col-md-4 option-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Fee Management</h5>
+                        <p class="card-text">Manage fees collected from consumers.</p>
+                        <a href="#" class="btn btn-primary">Manage Fees</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Complaints Management Option -->
+            <div class="col-md-4 option-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Complaints</h5>
+                        <p class="card-text">View and manage complaints from residents.</p>
+                        <a href="#" class="btn btn-primary">Manage Complaints</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Admin Panel. All rights reserved.</p>
-        </div>
-    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
