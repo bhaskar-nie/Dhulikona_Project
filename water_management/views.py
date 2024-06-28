@@ -22,25 +22,19 @@ def adminlogin(request):
         password = data.get("password")
         login_type = data.get("loginas")
 
-        # First, check if user exists
         if login_type == "admin":
             usercheck = User.objects.filter(username=username)
             if usercheck.exists():
-                user = authenticate(username=username, password=password)  # check password and return User or none
+                user = authenticate(username=username, password=password)
                 if user is None:
                     messages.error(request, "Invalid Credentials.")
                     return redirect('/portal/login')
-                
-                # User exists, log in and redirect
                 messages.info(request, "Logged in successfully.")
                 login(request, user)
-                return redirect('/admin-panel')  # Redirect to admin panel after login
-            
+                return redirect('/admin-panel')
             else:
-                # User doesn't exist
                 messages.error(request, "Invalid username.")
                 return redirect('/portal/login')
-        
         else:
             person = Person.objects.filter(person_name=username, person_role=login_type).first()
             if person:
@@ -58,6 +52,14 @@ def adminlogin(request):
                     elif login_type == "consumer":
                         context = {'person': person}
                         return render(request, 'consumer_panel.html', context)
+                    elif login_type == "pumpoperator":
+                        pump_operator = PumpOperator.objects.get(operator=person)
+                        records = TimeEntry.objects.filter(pump_operator=pump_operator)
+                        context = {
+                            'pump_operator': pump_operator,
+                            'records': records
+                        }
+                        return render(request, 'pump_operator_panel.html', context)
                 elif not person.is_enabled:
                     messages.error(request, "User is disabled. Please contact the administrator.")
                     return redirect('/portal/login')
@@ -69,6 +71,7 @@ def adminlogin(request):
                 return redirect('/portal/login')
 
     return render(request, 'userlogin.html')
+
 
 def logoutuser(request):
     logout(request)
@@ -472,3 +475,79 @@ def assign_contractor(request, panchayat_id):
 def view_consumers(request):
     consumers = Person.objects.filter(person_role='consumer').order_by('gram_panchayat__panchayat_name')
     return render(request, 'view_consumers.html', {'consumers': consumers})
+
+def assign_pump_operator(request, panchayat_id):
+    panchayat = get_object_or_404(GramPanchayat, id=panchayat_id)
+    water_committee = WaterUserCommittee.objects.filter(committee_panchayat=panchayat).first()
+
+    if request.method == 'POST':
+        operator_name = request.POST.get('operator_name')
+        operator_aadhaar = request.POST.get('operator_aadhaar')
+        operator_contact = request.POST.get('operator_contact')
+        operator_address = request.POST.get('operator_address')
+        operator_password = request.POST.get('operator_password')
+        operator_photo = request.FILES.get('operator_photo')
+
+        # Create a new Person object for the Pump Operator
+        operator_person = Person.objects.create(
+            person_name=operator_name,
+            aadhaar=operator_aadhaar,
+            contact=operator_contact,
+            address=operator_address,
+            password=operator_password,
+            person_role='pumpoperator',
+            is_enabled=True,
+            photo=operator_photo,
+        )
+
+        # Create a new PumpOperator object
+        pump_operator = PumpOperator.objects.create(
+            operator=operator_person,
+            water_user_committee=water_committee,
+        )
+
+        return redirect('gram_panchayat_management')  # Redirect to your main page after creation
+
+    context = {
+        'panchayat': panchayat,
+    }
+    return render(request, 'assign_pump_operator.html', context)
+
+def mark_attendance(request):
+    if request.method == "POST":
+        operator_id = request.POST.get("operator_id")
+        in_time = request.POST.get("in_time")
+        out_time = request.POST.get("out_time")
+        
+        # Handle supply_enabled checkbox correctly
+        supply_enabled = request.POST.get("supply_enabled") == 'on'
+
+        pump_operator = PumpOperator.objects.get(id=operator_id)
+
+        # Create a new TimeEntry for the pump operator
+        time_entry = TimeEntry.objects.create(
+            pump_operator=pump_operator,
+            in_time=in_time,
+            out_time=out_time,
+            supply_enabled=supply_enabled  # Save supply_enabled in TimeEntry
+        )
+
+        pump_operator.working_days += 1
+        pump_operator.save()
+        
+        # Update due days for consumers if supply_enabled is True
+        if supply_enabled:
+            consumers = Person.objects.filter(gram_panchayat=pump_operator.water_user_committee.committee_panchayat, person_role='consumer')
+            for consumer in consumers:
+                consumer.due_days += 1
+                consumer.save()
+
+        messages.info(request, "Attendance marked successfully.")
+        records = TimeEntry.objects.filter(pump_operator=pump_operator)
+        context = {
+            'pump_operator': pump_operator,
+            'records': records
+        }
+        return render(request, 'pump_operator_panel.html', context)
+
+    return render(request, 'pump_operator_panel.html')

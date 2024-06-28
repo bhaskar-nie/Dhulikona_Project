@@ -39,6 +39,10 @@ urlpatterns = [
     path('view-consumers/', view_consumers, name='viewconsumers'),
     path('assign_water_user_committee/<int:panchayat_id>/', assign_water_user_committee, name='assign_water_user_committee'),
     path('assign_contractor/<int:panchayat_id>/', assign_contractor, name='assign_contractor'),
+    path('assign_pump_operator/<int:panchayat_id>/', assign_pump_operator, name='assign_pump_operator'),
+    path('mark-attendance/', mark_attendance, name='mark_attendance'),
+    
+
 
 ]
 

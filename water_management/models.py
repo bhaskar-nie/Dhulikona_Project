@@ -68,9 +68,19 @@ class Pipeline(models.Model):
 class PumpOperator(models.Model):
     operator = models.ForeignKey(Person, related_name="pump_operator", on_delete=models.CASCADE)
     water_user_committee = models.ForeignKey(WaterUserCommittee, on_delete=models.CASCADE)
+    working_days = models.PositiveIntegerField(default=0)  # Total days worked
 
     def __str__(self):
         return self.operator.person_name
+
+class TimeEntry(models.Model):
+    pump_operator = models.ForeignKey(PumpOperator, related_name='time_entries', on_delete=models.CASCADE)
+    in_time = models.DateTimeField()
+    out_time = models.DateTimeField()
+    supply_enabled = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"TimeEntry for {self.pump_operator.operator.person_name} - In: {self.in_time}, Out: {self.out_time}"
 
 class WaterQuality(models.Model):
     pipeline = models.ForeignKey(Pipeline, on_delete=models.CASCADE)

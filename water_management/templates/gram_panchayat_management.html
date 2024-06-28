@@ -87,6 +87,15 @@
                         {% if panchayat.committeepanchayat.all %}
                             <h6 class="mt-3 mb-2">Water User Committee Head:</h6>
                             <p>{{ panchayat.committeepanchayat.first.committee_head.person_name }}</p>
+                            
+                            {% with pump_operators=panchayat.committeepanchayat.first.pumpoperator_set.all %}
+                                {% if pump_operators %}
+                                    <h6 class="mt-3 mb-2">Pump Operator:</h6>
+                                    <p>{{ pump_operators.first.operator.person_name }}</p>
+                                {% else %}
+                                    <a href="{% url 'assign_pump_operator' panchayat.committeepanchayat.first.id %}" class="btn btn-danger btn-action mt-3">Assign Pump Operator</a>
+                                {% endif %}
+                            {% endwith %}
                         {% else %}
                             <a href="{% url 'assign_water_user_committee' panchayat.id %}" class="btn btn-success btn-action mt-3">Assign Water User Committee</a>
                         {% endif %}
