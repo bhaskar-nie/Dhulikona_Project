@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from django.contrib.auth.hashers import make_password
+from django.http import HttpResponseRedirect
 from .models import *
 
 
@@ -129,6 +129,43 @@ def toggle_consumer_status(request, consumer_id):
     messages.success(request, f"Consumer { 'enabled' if consumer.is_enabled else 'disabled' } successfully.")
     return redirect('panchayatheadpage', panchayat_name=consumer.gram_panchayat.panchayat_name)
 
+def toggle_contractor(request, panchayat_id):
+    if request.method == 'POST':
+        panchayat = get_object_or_404(GramPanchayat, id=panchayat_id)
+        contractor_detail = panchayat.contractor.contractor_detail
+        if request.POST['action'] == 'disable':
+            contractor_detail.is_enabled = False
+            messages.success(request, 'Contractor disabled successfully.')
+        else:
+            contractor_detail.is_enabled = True
+            messages.success(request, 'Contractor enabled successfully.')
+        contractor_detail.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def toggle_committee_head(request, committee_id):
+    if request.method == 'POST':
+        committee = get_object_or_404(WaterUserCommittee, id=committee_id)
+        committee_head = committee.committee_head
+        if request.POST['action'] == 'disable':
+            committee_head.is_enabled = False
+            messages.success(request, 'Committee head disabled successfully.')
+        else:
+            committee_head.is_enabled = True
+            messages.success(request, 'Committee head enabled successfully.')
+        committee_head.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def toggle_pump_operator(request, operator_id):
+    if request.method == 'POST':
+        operator = get_object_or_404(Person, id=operator_id)
+        if request.POST['action'] == 'disable':
+            operator.is_enabled = False
+            messages.success(request, 'Pump operator disabled successfully.')
+        else:
+            operator.is_enabled = True
+            messages.success(request, 'Pump operator enabled successfully.')
+        operator.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 @csrf_exempt
 def update_water_fee_rate(request):
     if request.method == 'POST':
@@ -551,3 +588,11 @@ def mark_attendance(request):
         return render(request, 'pump_operator_panel.html', context)
 
     return render(request, 'pump_operator_panel.html')
+
+def manage_water_committees(request):
+    committees = WaterUserCommittee.objects.all()
+
+    context = {
+        'committees': committees,
+    }
+    return render(request, 'manage_water_committees.html', context)

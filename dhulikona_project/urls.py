@@ -29,6 +29,9 @@ urlpatterns = [
     path('logout/', logoutuser, name="logoutuser"),
     path('panchayatheadpage/<str:panchayat_name>/', panchayatheadpage, name='panchayatheadpage'),
     path('toggle_consumer_status/<int:consumer_id>/', toggle_consumer_status, name='toggle_consumer_status'),
+    path('toggle_contractor/<int:panchayat_id>/', toggle_contractor, name='toggle_contractor'),
+    path('toggle_committee_head/<int:committee_id>/', toggle_committee_head, name='toggle_committee_head'),
+    path('toggle_pump_operator/<int:pump_operator_id>/', toggle_pump_operator, name='toggle_pump_operator'),
     path('update-water-fee-rate/', update_water_fee_rate, name='update_water_fee_rate'),
     path('panchayat-head-mgmt/', panchayatheadmgmt, name="panchayatheadmgmt"),
     path('toggle-panchayat-head/<int:head_id>/', toggle_panchayat_head_status, name='toggle_panchayat_head_status'),
@@ -41,7 +44,7 @@ urlpatterns = [
     path('assign_contractor/<int:panchayat_id>/', assign_contractor, name='assign_contractor'),
     path('assign_pump_operator/<int:panchayat_id>/', assign_pump_operator, name='assign_pump_operator'),
     path('mark-attendance/', mark_attendance, name='mark_attendance'),
-    
+    path('manage_water_committees/', manage_water_committees, name='manage_water_committees'),
 
 
 ]
