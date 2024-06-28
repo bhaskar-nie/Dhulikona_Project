@@ -9,6 +9,8 @@ class Person(models.Model):
         ('panchayathead', 'Panchayat Head'),
         ('consumer', 'Consumer'),
         ('contractor', 'Contractor'),
+        ('watercommitteehead', 'Water Committee Head'),
+        ('pumpoperator', 'Pump Operator'),
     ]
 
     person_name = models.CharField(max_length=100)

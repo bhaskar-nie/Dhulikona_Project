@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password
 from .models import *
 
+
 # Create your views here.
 
 def home(request):
@@ -216,9 +217,11 @@ def gram_panchayat_management(request):
 @login_required(login_url="portal/login/")
 def add_panchayat(request):
     if request.method == 'POST':
+        # Panchayat details
         panchayat_name = request.POST.get('panchayat_name')
         panchayat_address = request.POST.get('panchayat_address')
 
+        # Panchayat Head details
         head_name = request.POST.get('head_name')
         head_aadhaar = request.POST.get('head_aadhaar')
         head_contact = request.POST.get('head_contact')
@@ -226,6 +229,7 @@ def add_panchayat(request):
         head_password = request.POST.get('head_password')
         head_photo = request.FILES.get('head_photo')
 
+        # Contractor details
         contractor_name = request.POST.get('contractor_name')
         contractor_aadhaar = request.POST.get('contractor_aadhaar')
         contractor_contact = request.POST.get('contractor_contact')
@@ -233,13 +237,22 @@ def add_panchayat(request):
         contractor_password = request.POST.get('contractor_password')
         contractor_photo = request.FILES.get('contractor_photo')
 
+        # Water User Committee details
+        committee_name = request.POST.get('committee_name')
+        committee_head_name = request.POST.get('committee_head_name')
+        committee_head_aadhaar = request.POST.get('committee_head_aadhaar')
+        committee_head_contact = request.POST.get('committee_head_contact')
+        committee_head_address = request.POST.get('committee_head_address')
+        committee_head_password = request.POST.get('committee_head_password')
+        committee_head_photo = request.FILES.get('committee_head_photo')
+
         # Create Panchayat
         new_panchayat = GramPanchayat.objects.create(
             panchayat_name=panchayat_name,
             panchayat_address=panchayat_address,
         )
 
-        # Create Panchayat Head
+        # Create Panchayat Head as a Consumer
         panchayat_head = Person.objects.create(
             person_name=head_name,
             aadhaar=head_aadhaar,
@@ -249,7 +262,24 @@ def add_panchayat(request):
             person_role='panchayathead',
             is_enabled=True,
             photo=head_photo,
-            gram_panchayat=new_panchayat  # Assigning the created panchayat to the head
+            gram_panchayat=new_panchayat,  # Assigning the created panchayat to the head
+            due_days=0,  # Default value for due days
+            enable_date=timezone.now(),  # Default value for enable date
+        )
+
+        # Create Consumer role for Panchayat Head
+        consumer_for_head = Person.objects.create(
+            person_name=head_name,
+            aadhaar=head_aadhaar,
+            contact=head_contact,
+            address=head_address,
+            password=head_password,
+            person_role='consumer',
+            is_enabled=True,
+            photo=head_photo,
+            gram_panchayat=new_panchayat,  # Assigning the created panchayat to the consumer
+            due_days=0,  # Default value for due days
+            enable_date=timezone.now(),  # Default value for enable date
         )
 
         # Create Contractor
@@ -262,12 +292,36 @@ def add_panchayat(request):
             person_role='contractor',
             is_enabled=True,
             photo=contractor_photo,
-            gram_panchayat=new_panchayat  # Assigning the created panchayat to the contractor
+            gram_panchayat=new_panchayat,  # Assigning the created panchayat to the contractor
         )
-        
+
         contractor = Contractor.objects.create(contractor_detail=contractor_person)
 
-        # Update Panchayat with head and contractor
+        # Create Water Committee Head if provided
+        if committee_head_name and committee_head_aadhaar:
+            committee_head = Person.objects.create(
+                person_name=committee_head_name,
+                aadhaar=committee_head_aadhaar,
+                contact=committee_head_contact,
+                address=committee_head_address,
+                password=committee_head_password,
+                person_role='watercommitteehead',
+                is_enabled=True,
+                photo=committee_head_photo,
+                gram_panchayat=new_panchayat,  # Assigning the created panchayat to the committee head
+            )
+        else:
+            committee_head = None
+
+        # Create Water User Committee if committee_head is provided
+        if committee_head:
+            water_committee = WaterUserCommittee.objects.create(
+                committee_name=committee_name,
+                committee_head=committee_head,
+                committee_panchayat=new_panchayat,
+            )
+
+        # Update Panchayat with head, contractor, and committee
         new_panchayat.panchayat_head = panchayat_head
         new_panchayat.contractor = contractor
         new_panchayat.save()
@@ -282,30 +336,137 @@ def assign_panchayat_head(request, panchayat_id):
     panchayat = get_object_or_404(GramPanchayat, id=panchayat_id)
 
     if request.method == 'POST':
-        head_id = request.POST.get('head_id')
-        password = request.POST.get('password')
+        head_name = request.POST.get('head_name')
+        head_aadhaar = request.POST.get('head_aadhaar')
+        head_contact = request.POST.get('head_contact')
+        head_address = request.POST.get('head_address')
+        head_password = request.POST.get('head_password')
+        head_photo = request.FILES.get('head_photo')
 
-        if head_id and password:
-            head = get_object_or_404(Person, id=head_id)
-            head.password = password
-            head.person_role = 'panchayathead'
-            head.gram_panchayat = panchayat
-            head.is_enabled = True
-            head.save()
+        # Create Panchayat Head as 'panchayathead'
+        head_panchayathead = Person.objects.create(
+            person_name=head_name,
+            aadhaar=head_aadhaar,
+            contact=head_contact,
+            address=head_address,
+            password=head_password,
+            person_role='panchayathead',
+            is_enabled=True,
+            photo=head_photo,
+            gram_panchayat=panchayat,
+        )
 
-            panchayat.panchayat_head = head
-            panchayat.save()
+        # Create Consumer role for Panchayat Head
+        head_consumer = Person.objects.create(
+            person_name=head_name,
+            aadhaar=head_aadhaar,
+            contact=head_contact,
+            address=head_address,
+            password=head_password,
+            person_role='consumer',
+            is_enabled=True,
+            photo=head_photo,
+            gram_panchayat=panchayat,
+            due_days=0,  # Default value for due days
+            enable_date=timezone.now(),  # Default value for enable date
+        )
 
-            messages.success(request, 'Panchayat Head assigned successfully.')
-            return redirect('gram_panchayat_management')
+        # Update Panchayat with new head
+        panchayat.panchayat_head = head_panchayathead
+        panchayat.save()
 
-        messages.error(request, 'Please provide a valid head ID and password.')
+        messages.success(request, 'Panchayat Head assigned successfully.')
+        return redirect('gram_panchayat_management')
 
     context = {
         'panchayat': panchayat,
-        'residents': panchayat.residents.filter(person_role='consumer')
     }
     return render(request, 'assign_panchayat_head.html', context)
+
+@login_required(login_url="portal/login/")
+def assign_water_user_committee(request, panchayat_id):
+    panchayat = get_object_or_404(GramPanchayat, id=panchayat_id)
+
+    if request.method == 'POST':
+        committee_name = request.POST.get('committee_name')
+        head_name = request.POST.get('head_name')
+        head_aadhaar = request.POST.get('head_aadhaar')
+        head_contact = request.POST.get('head_contact')
+        head_address = request.POST.get('head_address')
+        head_password = request.POST.get('head_password')
+        head_photo = request.FILES.get('head_photo')
+
+        # Create Water User Committee Head as 'watercommitteehead'
+        committee_head = Person.objects.create(
+            person_name=head_name,
+            aadhaar=head_aadhaar,
+            contact=head_contact,
+            address=head_address,
+            password=head_password,
+            person_role='watercommitteehead',
+            is_enabled=True,
+            photo=head_photo,
+            gram_panchayat=panchayat,
+            due_days=0,  # Default value for due days
+            enable_date=timezone.now(),  # Default value for enable date
+        )
+
+        # Create Water User Committee
+        water_committee = WaterUserCommittee.objects.create(
+            committee_name=committee_name,
+            committee_head=committee_head,
+            committee_panchayat=panchayat,
+        )
+
+        messages.success(request, 'Water User Committee assigned successfully.')
+        return redirect('gram_panchayat_management')
+
+    context = {
+        'panchayat': panchayat,
+    }
+    return render(request, 'assign_water_user_committee.html', context)
+
+def assign_contractor(request, panchayat_id):
+    panchayat = get_object_or_404(GramPanchayat, id=panchayat_id)
+
+    if request.method == 'POST':
+        # Get form data
+        contractor_name = request.POST.get('contractor_name')
+        contractor_aadhaar = request.POST.get('contractor_aadhaar')
+        contractor_contact = request.POST.get('contractor_contact')
+        contractor_address = request.POST.get('contractor_address')
+        contractor_password = request.POST.get('contractor_password')
+        contractor_photo = request.FILES.get('contractor_photo')
+
+        if contractor_name and contractor_password:
+            # Create a new Person instance (contractor)
+            contractor_person = Person.objects.create(
+                person_name=contractor_name,
+                aadhaar=contractor_aadhaar,
+                contact=contractor_contact,
+                address=contractor_address,
+                password=contractor_password,
+                person_role='contractor',
+                is_enabled=True,
+                photo=contractor_photo,
+                gram_panchayat=panchayat  # Assigning the created panchayat to the contractor
+            )
+
+            # Create a Contractor instance and associate with the GramPanchayat
+            contractor_instance = Contractor.objects.create(contractor_detail=contractor_person)
+            panchayat.contractor = contractor_instance
+            panchayat.save()
+
+            messages.success(request, 'Contractor assigned successfully.')
+            return redirect('gram_panchayat_management')
+
+        else:
+            messages.error(request, 'Please provide contractor name and password.')
+
+    context = {
+        'panchayat': panchayat,
+    }
+    return render(request, 'assign_contractor.html', context)
 
 @login_required(login_url="portal/login/")
 def view_consumers(request):

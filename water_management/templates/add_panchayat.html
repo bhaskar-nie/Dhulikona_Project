@@ -8,21 +8,11 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logoutuser' %}">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
     <div class="container mt-4">
-        <h1>Add Panchayat</h1>
+        <h3>Add Panchayat</h3>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            <!-- Panchayat details -->
             <div class="form-group">
                 <label for="panchayat_name">Panchayat Name:</label>
                 <input type="text" class="form-control" id="panchayat_name" name="panchayat_name" required>
@@ -31,6 +21,9 @@
                 <label for="panchayat_address">Panchayat Address:</label>
                 <input type="text" class="form-control" id="panchayat_address" name="panchayat_address" required>
             </div>
+            <hr>
+            <!-- Panchayat Head details -->
+            <h3>Panchayat Head Details</h3>
             <div class="form-group">
                 <label for="head_name">Panchayat Head Name:</label>
                 <input type="text" class="form-control" id="head_name" name="head_name" required>
@@ -53,10 +46,11 @@
             </div>
             <div class="form-group">
                 <label for="head_photo">Panchayat Head Photo:</label>
-                <input type="file" class="form-control-file" id="head_photo" name="head_photo" accept="image/*">
+                <input type="file" class="form-control-file" id="head_photo" name="head_photo">
             </div>
-            <h1>Add Contractor details</h1>
             <hr>
+            <!-- Contractor details -->
+            <h3>Contractor Details</h3>
             <div class="form-group">
                 <label for="contractor_name">Contractor Name:</label>
                 <input type="text" class="form-control" id="contractor_name" name="contractor_name" required>
@@ -79,23 +73,47 @@
             </div>
             <div class="form-group">
                 <label for="contractor_photo">Contractor Photo:</label>
-                <input type="file" class="form-control-file" id="contractor_photo" name="contractor_photo" accept="image/*">
+                <input type="file" class="form-control-file" id="contractor_photo" name="contractor_photo">
             </div>
+            <hr>
+            <!-- Water User Committee details -->
+            <h3>Water User Committee Details</h3>
+            <div class="form-group">
+                <label for="committee_name">Water User Committee Name:</label>
+                <input type="text" class="form-control" id="committee_name" name="committee_name">
+            </div>
+            <div class="form-group">
+                <label for="committee_head_name">Committee Head Name:</label>
+                <input type="text" class="form-control" id="committee_head_name" name="committee_head_name">
+            </div>
+            <div class="form-group">
+                <label for="committee_head_aadhaar">Committee Head Aadhaar:</label>
+                <input type="text" class="form-control" id="committee_head_aadhaar" name="committee_head_aadhaar">
+            </div>
+            <div class="form-group">
+                <label for="committee_head_contact">Committee Head Contact:</label>
+                <input type="text" class="form-control" id="committee_head_contact" name="committee_head_contact">
+            </div>
+            <div class="form-group">
+                <label for="committee_head_address">Committee Head Address:</label>
+                <input type="text" class="form-control" id="committee_head_address" name="committee_head_address">
+            </div>
+            <div class="form-group">
+                <label for="committee_head_password">Committee Head Password:</label>
+                <input type="password" class="form-control" id="committee_head_password" name="committee_head_password">
+            </div>
+            <div class="form-group">
+                <label for="committee_head_photo">Committee Head Photo:</label>
+                <input type="file" class="form-control-file" id="committee_head_photo" name="committee_head_photo">
+            </div>
+
             <button type="submit" class="btn btn-primary">Add Panchayat</button>
         </form>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container">
-            <span class="text-muted">© 2024 Water Management System</span>
-        </div>
-    </footer>
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>

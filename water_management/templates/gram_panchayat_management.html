@@ -4,7 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Gram Panchayat Management</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            height: 100%;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .card-text {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .img-thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .btn-action {
+            width: 100%;
+            margin-top: auto;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -24,12 +53,14 @@
 
     <!-- Main content -->
     <div class="container mt-5">
-        <h1 class="mb-4">Gram Panchayat Management</h1>
-        <div class="row">
+        <h1 class="text-center mb-4">Gram Panchayat Management</h1>
+        <!-- Add Panchayat Button -->
+        <div class="row mb-4">
             <div class="col-12">
-                <a href="{% url 'add_panchayat' %}" class="btn btn-primary mb-4">Add Panchayat</a>
+                <a href="{% url 'add_panchayat' %}" class="btn btn-primary">Add Panchayat</a>
             </div>
         </div>
+
         <div class="row">
             {% for panchayat in panchayats %}
             <div class="col-md-4 mb-4">
@@ -37,12 +68,27 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ panchayat.panchayat_name }}</h5>
                         <p class="card-text">{{ panchayat.panchayat_address }}</p>
+                        
                         {% if panchayat.panchayat_head %}
-                            <h6>Panchayat Head:</h6>
+                            <h6 class="mt-3 mb-2">Panchayat Head:</h6>
                             <p>{{ panchayat.panchayat_head.person_name }}</p>
-                            <img src="{{ panchayat.panchayat_head.photo.url }}" alt="{{ panchayat.panchayat_head.person_name }}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                            <img src="{{ panchayat.panchayat_head.photo.url }}" alt="{{ panchayat.panchayat_head.person_name }}" class="img-thumbnail">
                         {% else %}
-                            <a href="{% url 'assign_panchayat_head' panchayat.id %}" class="btn btn-warning">Assign Panchayat Head</a>
+                            <a href="{% url 'assign_panchayat_head' panchayat.id %}" class="btn btn-warning btn-action mt-3">Assign Panchayat Head</a>
+                        {% endif %}
+    
+                        {% if panchayat.contractor %}
+                            <h6 class="mt-3 mb-2">Contractor:</h6>
+                            <p>{{ panchayat.contractor.contractor_detail.person_name }}</p>
+                        {% else %}
+                            <a href="{% url 'assign_contractor' panchayat.id %}" class="btn btn-info btn-action mt-3">Assign Contractor</a>
+                        {% endif %}
+    
+                        {% if panchayat.committeepanchayat.all %}
+                            <h6 class="mt-3 mb-2">Water User Committee Head:</h6>
+                            <p>{{ panchayat.committeepanchayat.first.committee_head.person_name }}</p>
+                        {% else %}
+                            <a href="{% url 'assign_water_user_committee' panchayat.id %}" class="btn btn-success btn-action mt-3">Assign Water User Committee</a>
                         {% endif %}
                     </div>
                 </div>
@@ -52,15 +98,15 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-light text-center text-lg-start mt-auto">
-        <div class="container p-4">
-            <p class="text-center">&copy; 2024 Dhulikona Foundation . All rights reserved.</p>
+    <footer class="bg-light text-center text-lg-start mt-auto py-3">
+        <div class="container">
+            <p class="text-muted">&copy; 2024 Dhulikona Foundation. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

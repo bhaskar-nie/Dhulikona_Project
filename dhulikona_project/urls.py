@@ -37,6 +37,9 @@ urlpatterns = [
     path('add-panchayat/', add_panchayat, name='add_panchayat'),
     path('assign-panchayat-head/<int:panchayat_id>/', assign_panchayat_head, name='assign_panchayat_head'),
     path('view-consumers/', view_consumers, name='viewconsumers'),
+    path('assign_water_user_committee/<int:panchayat_id>/', assign_water_user_committee, name='assign_water_user_committee'),
+    path('assign_contractor/<int:panchayat_id>/', assign_contractor, name='assign_contractor'),
+
 ]
 
 # Part A for static files
