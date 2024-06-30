@@ -1,6 +1,6 @@
 digraph model_graph {
   // Dotfile by Django-Extensions graph_models
-  // Created: 2024-06-26 17:27
+  // Created: 2024-06-30 11:11
   // Cli Options: -a --dot -o my_project_models.dot
 
   fontname = "Roboto"
@@ -507,6 +507,22 @@ digraph model_graph {
   
   
     <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">due_days</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">IntegerField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">enable_date</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">DateTimeField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
     <FONT FACE="Roboto">is_enabled</FONT>
     </TD><TD ALIGN="LEFT">
     <FONT FACE="Roboto">BooleanField</FONT>
@@ -739,6 +755,64 @@ digraph model_graph {
     </TD></TR>
   
   
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">working_days</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">PositiveIntegerField</FONT>
+    </TD></TR>
+  
+  
+    </TABLE>
+    >]
+
+  water_management_models_TimeEntry [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    TimeEntry
+    </B></FONT></TD></TR>
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto"><B>id</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto"><B>pump_operator</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">in_time</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">DateTimeField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">out_time</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">DateTimeField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">supply_enabled</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">BooleanField</FONT>
+    </TD></TR>
+  
+  
     </TABLE>
     >]
 
@@ -885,9 +959,9 @@ digraph model_graph {
   
   
     <TR><TD ALIGN="LEFT" BORDER="0">
-    <FONT FACE="Roboto"><B>fee_water_committee</B></FONT>
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>concerned_person</B></FONT>
     </TD><TD ALIGN="LEFT">
-    <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
     </TD></TR>
   
   
@@ -930,6 +1004,64 @@ digraph model_graph {
     <FONT FACE="Roboto">fee_rate</FONT>
     </TD><TD ALIGN="LEFT">
     <FONT FACE="Roboto">IntegerField</FONT>
+    </TD></TR>
+  
+  
+    </TABLE>
+    >]
+
+  water_management_models_Payment [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Payment
+    </B></FONT></TD></TR>
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto"><B>id</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto"><B>person</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">amount</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">FloatField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT COLOR="#7B7B7B" FACE="Roboto">date</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">payment_id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">CharField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">payment_signature</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">CharField</FONT>
     </TD></TR>
   
   
@@ -1017,6 +1149,9 @@ digraph model_graph {
   water_management_models_PumpOperator -> water_management_models_WaterUserCommittee
   [label=" water_user_committee (pumpoperator)"] [arrowhead=none, arrowtail=dot, dir=both];
 
+  water_management_models_TimeEntry -> water_management_models_PumpOperator
+  [label=" pump_operator (time_entries)"] [arrowhead=none, arrowtail=dot, dir=both];
+
   water_management_models_WaterQuality -> water_management_models_Pipeline
   [label=" pipeline (waterquality)"] [arrowhead=none, arrowtail=dot, dir=both];
 
@@ -1026,8 +1161,11 @@ digraph model_graph {
   water_management_models_Maintenance -> water_management_models_Pipeline
   [label=" pipeline (maintenance)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  water_management_models_FeeCollection -> water_management_models_WaterUserCommittee
-  [label=" fee_water_committee (feewatercommittee)"] [arrowhead=none, arrowtail=dot, dir=both];
+  water_management_models_FeeCollection -> water_management_models_Person
+  [label=" concerned_person (person_fee)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  water_management_models_Payment -> water_management_models_Person
+  [label=" person (payments)"] [arrowhead=none, arrowtail=dot, dir=both];
 
 
 }
