@@ -45,6 +45,7 @@ urlpatterns = [
     path('assign_pump_operator/<int:panchayat_id>/', assign_pump_operator, name='assign_pump_operator'),
     path('mark-attendance/', mark_attendance, name='mark_attendance'),
     path('manage_water_committees/', manage_water_committees, name='manage_water_committees'),
+    path('pay_bill/<int:person_id>/', pay_bill, name='pay_bill'),
 
 
 ]

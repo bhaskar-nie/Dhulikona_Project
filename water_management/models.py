@@ -116,3 +116,14 @@ class FeeCollection(models.Model):
 
 class FeeRate(models.Model):
     fee_rate = models.IntegerField(default=3)
+
+
+class Payment(models.Model):
+    person = models.ForeignKey(Person, related_name='payments', on_delete=models.CASCADE)
+    payment_id = models.CharField(max_length=100)
+    payment_signature = models.CharField(max_length=100)
+    amount = models.FloatField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Payment {self.payment_id} for {self.person.person_name} on {self.date}"

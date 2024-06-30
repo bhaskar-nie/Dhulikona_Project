@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-26pw6%yjx03o(=_m1ujb1st9@)2!qmgscei=u%k2+h$0q_x6h6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.41.57', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -64,7 +64,11 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
+            'libraries':{
+                'custom_filters': 'water_management.custom_filters',
+            }
         },
     },
 ]
@@ -134,3 +138,6 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+RAZORPAY_KEY_ID='rzp_test_0z5iaFUXXPxmWS'
+RAZORPAY_KEY_SECRET='n4fcHNIfbD2ByfYt3Gp6Kd6K'

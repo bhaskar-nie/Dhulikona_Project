@@ -8,6 +8,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from .models import *
+import razorpay
+from django.http import HttpResponseBadRequest
+
 
 
 # Create your views here.
@@ -50,7 +53,12 @@ def adminlogin(request):
                         }
                         return render(request, 'panchayatheadpage.html', context)
                     elif login_type == "consumer":
-                        context = {'person': person}
+                        fee_rate = FeeRate.objects.first() 
+                        
+                        context = {
+                            'person': person,
+                            'fee_rate': fee_rate,
+                        }
                         return render(request, 'consumer_panel.html', context)
                     elif login_type == "pumpoperator":
                         pump_operator = PumpOperator.objects.get(operator=person)
@@ -596,3 +604,50 @@ def manage_water_committees(request):
         'committees': committees,
     }
     return render(request, 'manage_water_committees.html', context)
+
+from django.conf import settings    
+def pay_bill(request, person_id):
+    person = get_object_or_404(Person, id=person_id)
+    fee_rate = FeeRate.objects.first()
+    total_bill = person.due_days * fee_rate.fee_rate * 100  # Convert to paise
+
+    minimum_amount = 100  # Minimum amount in paise (equivalent to 1 INR)
+
+    if total_bill < minimum_amount:
+        return HttpResponseBadRequest("Order amount less than minimum amount allowed")
+
+    payment = None
+    if request.method == 'POST':
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        payment = client.order.create({
+            'amount': total_bill,
+            'currency': 'INR',
+            'payment_capture': '1'
+        })
+
+        if 'razorpay_payment_id' in request.POST and 'razorpay_signature' in request.POST:
+            payment_id = request.POST['razorpay_payment_id']
+            payment_signature = request.POST['razorpay_signature']
+
+            # Save the payment details
+            Payment.objects.create(
+                person=person,
+                payment_id=payment_id,
+                payment_signature=payment_signature,
+                amount=total_bill / 100  # Convert back to INR
+            )
+
+            # Reset due days after payment
+            person.due_days = 0
+            person.save()
+
+            messages.success(request, f'Bill of amount {total_bill / 100} has been paid successfully.')
+
+    context = {
+        'person': person,
+        'fee_rate': fee_rate,
+        'payment': payment,
+        'razorpay_key': settings.RAZORPAY_KEY_ID,
+        'total_bill': total_bill
+    }
+    return render(request, 'consumer_panel.html', context)
