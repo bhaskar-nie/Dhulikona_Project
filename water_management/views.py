@@ -614,7 +614,15 @@ def pay_bill(request, person_id):
     minimum_amount = 100  # Minimum amount in paise (equivalent to 1 INR)
 
     if total_bill < minimum_amount:
-        return HttpResponseBadRequest("Order amount less than minimum amount allowed")
+        messages.error(request, "Order amount less than minimum amount allowed")
+        context = {
+            'person': person,
+            'fee_rate': fee_rate,
+            'payment': None,
+            'razorpay_key': settings.RAZORPAY_KEY_ID,
+            'total_bill': total_bill
+        }
+        return render(request, 'consumer_panel.html', context)
 
     payment = None
     if request.method == 'POST':
