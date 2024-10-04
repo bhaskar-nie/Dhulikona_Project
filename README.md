@@ -4,10 +4,6 @@
 
 This project is aimed at developing a Database Management System (DBMS) for the Dhulikona Foundation in Uttar Pradesh to support the **Jal Jeevan Mission**. The mission focuses on providing clean drinking water to rural households by addressing issues such as arsenic contamination. The system ensures efficient communication, tracking, and monitoring to streamline the delivery of clean water. 
 
-## Team Members
-
-- **Bhaskar Anand** (USN: 4NI22CS037)
-- **Anand Daga** (USN: 4NI22CS023)
 
 ## Problem Statement
 
@@ -76,12 +72,7 @@ The current system used by the foundation relies on manual methods and rudimenta
 - **Mobile Application**: Mobile app development for on-the-go tracking and issue management.
 - **Advanced Analytics**: Implementation of predictive analytics for maintenance and efficiency reports.
 
-## Contributing
+## Contributors:
 
-We welcome contributions from the community! If you would like to contribute:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -am 'Add new feature'`).
-4. Push the branch (`git push origin feature-branch`).
-5. Open a Pull Request.
+- **Bhaskar Anand** (USN: 4NI22CS037)
+- **Anand Daga** (USN: 4NI22CS023)
