@@ -33,8 +33,6 @@ The current system used by the foundation relies on manual methods and rudimenta
 - **Frontend Framework:** HTML, Bootstrap CSS
 
 
-Here’s a corrected and slightly polished version of your installation guide:
-
 ## Installation Guide
 
 1. **Clone the Repository**
