@@ -33,11 +33,13 @@ The current system used by the foundation relies on manual methods and rudimenta
 - **Frontend Framework:** HTML, Bootstrap CSS
 
 
+Here’s a corrected and slightly polished version of your installation guide:
+
 ## Installation Guide
 
 1. **Clone the Repository**
    ```bash
-   https://github.com/bhaskar-nie/Dhulikona_Project.git
+   git clone https://github.com/bhaskar-nie/Dhulikona_Project.git
    ```
 
 2. **Install Required Packages**
@@ -46,19 +48,25 @@ The current system used by the foundation relies on manual methods and rudimenta
    pip install -r requirements.txt
    ```
 
-3. **Set Up Database**
+3. **Navigate to the Water Management Folder**
+   Change to the `water_management` directory:
+   ```bash
+   cd water_management
+   ```
+
+4. **Set Up the Database**
    Run the following command to apply migrations and set up the database:
    ```bash
    python manage.py migrate
    ```
 
-4. **Run the Development Server**
+5. **Run the Development Server**
    To start the server and access the system locally:
    ```bash
    python manage.py runserver
    ```
 
-5. **Access the System**
+6. **Access the System**
    Open a web browser and go to `http://127.0.0.1:8000` to access the system.
 
 ## Usage
