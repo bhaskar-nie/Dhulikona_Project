@@ -47,9 +47,9 @@ The current system used by the foundation relies on manual methods and rudimenta
    ```
 
 3. **Navigate to the Water Management Folder**
-   Change to the `water_management` directory:
+   Change to the `dhulikona_project` directory:
    ```bash
-   cd water_management
+   cd dhulikona_project
    ```
 
 4. **Set Up the Database**
